@@ -18,31 +18,29 @@
         </ul>
         <div id="t1">
           <p id="mensajeFinal01"></p>
-          <button id= "pestanias001"type="submit">all información</button>
+          <button id= "button-all"type="submit">all información</button>
         </div>
       </div>
 
       <h3>Buscar por Canton</h3>
-      <div id="pestanias1">
+      <div id="pestanias2">
         <ul>
           <li><a href="t1">Canton</a></li>
         </ul>
-        <label for="canton">Elige el canton </label>
-        <input type="text" id="canton" name="canton" />
+        <input type="text" id="input-canton" name="canton" />
         <div id="t1">
-          <button id= "button02" type="submit">buscar por cantón</button>
+          <button id= "button-canton" type="submit">buscar por cantón</button>
           <p id="mensajeFinal02"></p>
         </div>
       </div>
       <h3>Buscar por Limite</h3>
-      <div id="pestanias1">
+      <div id="pestanias3">
         <ul>
           <li><a href="t1">Limite</a></li>
         </ul>
-        <label for="limite">Elige el limite </label>
-        <input type="text" id="limite" name="limite" />
+        <input type="number" id="input-limit" name="limite" />
         <div id="t1">
-          <button id="pestanias003" type="submit">buscar por límite</button>
+          <button id="button-limit" type="submit">buscar por límite</button>
           <p id="mensajeFinal03"></p>
         </div>
       </div>
@@ -50,13 +48,12 @@
   <script>
     $(document).ready(function() {
       $("#pestanias1").tabs();
-      $( "#pestanias001" ).click(function() {
+      $( "#button-all" ).click(function() {
         $.ajax({
               dataType: 'json',
               url: "http://127.0.0.1:5984/instituciones/_design/primero/_view/vista001?include_docs=true"
               }).then(function(data) {
                 console.log(data);
-
                 $('#mensajeFinal01').append("<table><tr><th>NombreInstitucion</th><th>Provincia</th><th>Canton</th><th>Parroquia</th></tr>");
                 for(var i=0; i<data.rows.length; i++){
                   var nombre = data.rows[i].doc.Nombre_Institucion;
@@ -68,6 +65,49 @@
                 $('#mensajeFinal01').append("</table>")
               });
       });
+
+      $("#pestanias2").tabs();
+      $( "#button-canton" ).click(function() {
+        var canton = $("#input-canton").val();
+        var url = 'http://127.0.0.1:5984/instituciones/_design/primero/_view/vista001?key="'+canton+'"&include_docs=true'
+        $.ajax({
+              dataType: 'json',
+              url: url
+              }).then(function(data) {
+                console.log(data);
+                $('#mensajeFinal02').append("<table><tr><th>NombreInstitucion</th><th>Provincia</th><th>Canton</th><th>Parroquia</th></tr>");
+                for(var i=0; i<data.rows.length; i++){
+                  var nombre = data.rows[i].doc.Nombre_Institucion;
+                  var provincia = data.rows[i].doc.Provincia;
+                  var canton = data.rows[i].doc.Canton;
+                  var parroquia = data.rows[i].doc.Parroquia
+                  $('#mensajeFinal02').append("<tr> <td> "+ nombre +"</td> <td> "+ provincia +"<td> "+ canton +"</td> <td>"+ parroquia +"</td>")
+                }
+                $('#mensajeFinal02').append("</table>")
+              });
+      });
+
+      $("#pestanias3").tabs();
+      $( "#button-limit" ).click(function() {
+        var limit = $("#input-limit").val();
+        var url = 'http://127.0.0.1:5984/instituciones/_design/primero/_view/vista001?limit='+limit+'&include_docs=true'
+        $.ajax({
+              dataType: 'json',
+              url: url
+              }).then(function(data) {
+                console.log(data);
+                $('#mensajeFinal03').append("<table><tr><th>NombreInstitucion</th><th>Provincia</th><th>Canton</th><th>Parroquia</th></tr>");
+                for(var i=0; i<data.rows.length; i++){
+                  var nombre = data.rows[i].doc.Nombre_Institucion;
+                  var provincia = data.rows[i].doc.Provincia;
+                  var canton = data.rows[i].doc.Canton;
+                  var parroquia = data.rows[i].doc.Parroquia
+                  $('#mensajeFinal03').append("<tr> <td> "+ nombre +"</td> <td> "+ provincia +"<td> "+ canton +"</td> <td>"+ parroquia +"</td>")
+                }
+                $('#mensajeFinal03').append("</table>")
+              });
+      });
+
    });
   </script>
 </html>
